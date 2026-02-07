@@ -18,5 +18,6 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER_NAME }}
           service_account: ${{ secrets.GCP_SA_EMAIL }}
+          audience: https://github.com/${{ github.repository_owner }}
       - name: Trigger Cloud Build
         run: gcloud builds submit --substitutions=_GITHUB_TOKEN="${{ secrets.TOKEN }}",_GITHUB_PR_NUMBER="${{ github.event.pull_request.number }}",_GITHUB_REPO="${{ github.repository }}" .
