@@ -22,6 +22,7 @@ resource "google_project_service" "bootstrap" {
     "sqladmin.googleapis.com",
     "orgpolicy.googleapis.com",
     "secretmanager.googleapis.com",
+    "cloudbuild.googleapis.com",
   ])
   service = each.key
 }
@@ -127,3 +128,32 @@ resource "google_iam_workload_identity_pool_provider" "github_actions" {
   ]
 }
 
+######## GITHUB DEPLOY KEY ########
+
+ephemeral "tls_private_key" "github_deploy" {
+  algorithm = "RSA"
+  rsa_bits = 4096
+  depends_on = [
+    google_project_service.bootstrap
+  ]
+}
+
+resource "google_secret_manager_secret" "github_deploy" {
+  secret_id  = "github-deploy-key"
+  project    = google_project.bootstrap.project_id
+  replication {
+    auto {}
+  }
+  depends_on = [
+    ephemeral.tls_private_key.github_deploy
+  ]
+}
+
+resource "google_secret_manager_secret_version" "github_deploy" {
+  secret         = google_secret_manager_secret.github_deploy.id
+  secret_data_wo = ephemeral.tls_private_key.github_deploy.public_key_openssh
+  secret_data_wo_version = var.github_deploy_key_version
+  depends_on = [
+    google_secret_manager_secret.github_deploy,
+  ]
+}
