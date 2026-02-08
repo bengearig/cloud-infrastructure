@@ -16,9 +16,10 @@ steps:
       - '-c'
       - |
         TF_PLAN=$(terraform show -no-color /workspace/tfplan)
-        TF_PLAN="${TF_PLAN//$'\n'/\\\n}"
-        TF_PLAN="${TF_PLAN//\"/\\\"}"
-        echo -n "${TF_PLAN}" >> /workspace/tfplan.txt
+        TF_PLAN="$${TF_PLAN//$$'\n'/\\\n}"
+        TF_PLAN="$${TF_PLAN//$$'\r'/}"
+        TF_PLAN="$${TF_PLAN//\"/\\\"}"
+        echo -n "$${TF_PLAN}" >> /workspace/tfplan.txt
   - name: bash
     script: echo "\`\`\`" >> /workspace/tfplan.txt
   - name: gcr.io/cloud-builders/curl
