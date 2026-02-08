@@ -118,7 +118,7 @@ resource "google_sql_database_instance" "database_dev" {
   ]
 }
 
-######## SQL USER ########
+######## SQL ADMIN USER ########
 
 ephemeral "random_password" "database_dev" {
   length  = 16
@@ -149,6 +149,15 @@ resource "google_secret_manager_secret_version" "database_dev" {
   ]
 }
 
+data "google_secret_manager_secret_version" "database_dev" {
+  project = google_project.database_dev.project_id
+  secret = google_secret_manager_secret.database_dev.id
+  version = "latest"
+  depends_on = [
+    google_secret_manager_secret_version.database_dev
+  ]
+}
+
 resource "google_sql_user" "database_dev" {
   instance    = google_sql_database_instance.database_dev.name
   project     = google_project.database_dev.project_id
@@ -161,13 +170,75 @@ resource "google_sql_user" "database_dev" {
   ]
 }
 
-######## SQL DATABASE ########
+######## LOST AND FOUND ########
 
-resource "google_sql_database" "database_dev" {
+# DATABASE
+
+resource "google_sql_database" "lost_and_found_dev" {
   instance = google_sql_database_instance.database_dev.name
   project  = google_project.database_dev.project_id
-  name     = "my_test"
+  name     = var.lost_and_found_projects_database_name
   depends_on = [
     google_sql_database_instance.database_dev,
+  ]
+}
+
+# MIGRATIONS USER
+
+ephemeral "random_password" "lost_and_found_dev_migrations" {
+  length  = 16
+  special = true
+  upper   = true
+  lower   = true
+  numeric = true
+}
+
+resource "google_secret_manager_secret" "lost_and_found_dev_migrations" {
+  secret_id  = "${google_project.database_dev.project_id}"
+  project    = google_project.database_dev.project_id
+  replication {
+    auto {}
+  }
+  depends_on = [
+    google_sql_database.lost_and_found_dev,
+  ]
+}
+
+resource "google_secret_manager_secret_version" "lost_and_found_dev_migrations" {
+  secret         = google_secret_manager_secret.lost_and_found_dev_migrations.id
+  secret_data_wo = ephemeral.random_password.lost_and_found_dev_migrations.result
+  secret_data_wo_version = var.lost_and_found_projects_database_migrations_user_password_version
+  depends_on = [
+    google_secret_manager_secret.lost_and_found_dev_migrations,
+    ephemeral.random_password.lost_and_found_dev_migrations,
+  ]
+}
+
+resource "postgresql_role" "lost_and_found_dev_migrations" {
+  provider    = postgresql.laf_dev
+  name        = var.lost_and_found_projects_database_migrations_user
+  password_wo = ephemeral.lost_and_found_dev_migrations.result
+  password_wo_version = var.lost_and_found_projects_database_migrations_user_password_version
+  login       = true
+  depends_on  = [
+    google_secret_manager_secret_version.lost_and_found_dev_migrations,
+  ]
+}
+
+resource "postgresql_grant" "lost_and_found_dev_migrations" {
+  provider    = postgresql.laf_dev
+  database    = var.lost_and_found_projects_database_name
+  object_type = "table"
+  privileges = [
+    "SELECT",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "REFERENCES",
+    "CREATE",
+  ]
+  role        = postgresql_role.lost_and_found_dev_migrations.name
+  depends_on = [
+    postgresql_role.lost_and_found_dev_migrations,
   ]
 }
