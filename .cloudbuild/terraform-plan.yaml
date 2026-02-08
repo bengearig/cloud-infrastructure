@@ -15,7 +15,7 @@ steps:
       - show
       - -no-color
       - /workspace/tfplan
-      - ">>"
+      - >>
       - /workspace/tfplan.txt
   - name: bash
     script: echo "\`\`\`" >> /workspace/tfplan.txt
