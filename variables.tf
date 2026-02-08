@@ -30,9 +30,9 @@ variable "github_repo_names" {
   ]
 }
 
-variable "bootstrap_key_version" {
+variable "github_deploy_key_version" {
   type = string
-  default = 20260206
+  default = 20260208
 }
 
 variable "networking_projects_prefix" {

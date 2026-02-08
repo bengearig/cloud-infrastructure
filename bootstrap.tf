@@ -22,6 +22,7 @@ resource "google_project_service" "bootstrap" {
     "sqladmin.googleapis.com",
     "orgpolicy.googleapis.com",
     "secretmanager.googleapis.com",
+    "cloudbuild.googleapis.com",
   ])
   service = each.key
 }
@@ -126,4 +127,3 @@ resource "google_iam_workload_identity_pool_provider" "github_actions" {
     google_iam_workload_identity_pool.github_actions,
   ]
 }
-
