@@ -11,12 +11,11 @@ steps:
   - name: bash
     script: echo "\`\`\`" > /workspace/tfplan.txt
   - name: hashicorp/terraform:1.14
+    entrypoint: sh
     args:
-      - show
-      - -no-color
-      - /workspace/tfplan
-      - >>
-      - /workspace/tfplan.txt
+      - '-c'
+      - |
+        terraform show -no-color /workspace/tfplan >> /workspace/tfplan.txt
   - name: bash
     script: echo "\`\`\`" >> /workspace/tfplan.txt
   - name: gcr.io/cloud-builders/curl
