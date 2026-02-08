@@ -8,20 +8,19 @@ steps:
     args:
       - plan
       - -out=/workspace/tfplan
-  - name: bash
-    script: echo "\`\`\`" > /workspace/tfplan.txt
   - name: hashicorp/terraform:1.14
     entrypoint: sh
     args:
       - '-c'
       - |
+        echo -n "\`\`\`\\n" > /workspace/tfplan.txt
         TF_PLAN=$(terraform show -no-color /workspace/tfplan)
         TF_PLAN="$${TF_PLAN//$$'\n'/\\\n}"
         TF_PLAN="$${TF_PLAN//$$'\r'/}"
         TF_PLAN="$${TF_PLAN//\"/\\\"}"
         echo -n "$${TF_PLAN}" >> /workspace/tfplan.txt
-  - name: bash
-    script: echo "\`\`\`" >> /workspace/tfplan.txt && cat /workspace/tfplan.txt
+        echo -n "\`\`\`\\n" >> /workspace/tfplan.txt
+        cat /workspace/tfplan.txt
   - name: gcr.io/cloud-builders/curl
     entrypoint: bash
     args:
