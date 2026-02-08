@@ -194,7 +194,7 @@ ephemeral "random_password" "lost_and_found_dev_migrations" {
 }
 
 resource "google_secret_manager_secret" "lost_and_found_dev_migrations" {
-  secret_id  = "${google_project.database_dev.project_id}"
+  secret_id  = "lost-and-found-migrations-password"
   project    = google_project.database_dev.project_id
   replication {
     auto {}

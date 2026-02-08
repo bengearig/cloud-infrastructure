@@ -87,7 +87,7 @@ variable "lost_and_found_projects_database_migrations_user" {
 
 variable "lost_and_found_projects_database_migrations_user_password_version" {
   type = string
-  default = 20260208
+  default = 20260209
 }
 
 variable "lost_and_found_projects_database_app_user" {
