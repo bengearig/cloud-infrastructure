@@ -25,7 +25,8 @@ provider "google-beta" {
 
 provider "postgresql" {
   alias           = "laf_dev"
-  host            = google_sql_database_instance.database_dev.settings.ip_configuration.psc_config.psc_auto_connections.ip_address
+  scheme          = "gcppostgres"
+  host            = google_sql_database_instance.database_dev.connection_name
   port            = 5432
   database        = var.lost_and_found_projects_database_name
   username        = var.database_projects_user
