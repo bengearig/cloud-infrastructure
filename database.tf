@@ -217,7 +217,7 @@ resource "google_secret_manager_secret_version" "lost_and_found_dev_migrations" 
 resource "postgresql_role" "lost_and_found_dev_migrations" {
   provider    = postgresql.laf_dev
   name        = var.lost_and_found_projects_database_migrations_user
-  password_wo = ephemeral.lost_and_found_dev_migrations.result
+  password_wo = ephemeral.random_password.lost_and_found_dev_migrations.result
   password_wo_version = var.lost_and_found_projects_database_migrations_user_password_version
   login       = true
   depends_on  = [
