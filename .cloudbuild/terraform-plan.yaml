@@ -29,4 +29,4 @@ steps:
           -H "Authorization: Bearer ${_GITHUB_TOKEN}" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
           https://api.github.com/repos/${_GITHUB_REPO}/pulls/${_GITHUB_PR_NUMBER} \
-          -d '{"body":"$(</workspace/tfplan.txt)"}'
+          -d '{"body":"$$(</workspace/tfplan.txt)"}'
