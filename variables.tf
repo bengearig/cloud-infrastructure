@@ -50,14 +50,14 @@ variable "database_projects_prefix" {
   default = "database"
 }
 
-variable "database_projects_user" {
-  type = string
-  default = "admin"
-}
-
 variable "database_projects_primary_region" {
   type = string
   default = "us-central1"
+}
+
+variable "database_projects_user" {
+  type = string
+  default = "admin"
 }
 
 variable "database_projects_dev_password_version" {
@@ -73,4 +73,29 @@ variable "website_projects_prefix" {
 variable "lost_and_found_projects_prefix" {
   type = string
   default = "lost-and-found"
+}
+
+variable "lost_and_found_projects_database_name" {
+  type = string
+  default = "lost_and_found"
+}
+
+variable "lost_and_found_projects_database_migrations_user" {
+  type = string
+  default = "laf_migrations"
+}
+
+variable "lost_and_found_projects_database_migrations_user_password_version" {
+  type = string
+  default = 20260208
+}
+
+variable "lost_and_found_projects_database_app_user" {
+  type = string
+  default = "laf_migrations"
+}
+
+variable "lost_and_found_projects_database_app_user_password_version" {
+  type = string
+  default = 20260208
 }
