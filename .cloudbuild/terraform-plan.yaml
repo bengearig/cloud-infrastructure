@@ -21,7 +21,7 @@ steps:
         TF_PLAN="$${TF_PLAN//\"/\\\"}"
         echo -n "$${TF_PLAN}" >> /workspace/tfplan.txt
   - name: bash
-    script: echo "\`\`\`" >> /workspace/tfplan.txt
+    script: echo "\`\`\`" >> /workspace/tfplan.txt && cat /workspace/tfplan.txt
   - name: gcr.io/cloud-builders/curl
     entrypoint: bash
     args:
