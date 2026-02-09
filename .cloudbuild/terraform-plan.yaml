@@ -1,14 +1,14 @@
 options:
   logging: CLOUD_LOGGING_ONLY
 steps:
-  - name: hashicorp/terraform:1.14
+  - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
     args:
       - init
-  - name: hashicorp/terraform:1.14
+  - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
     args:
       - plan
       - -out=/workspace/tfplan
-  - name: hashicorp/terraform:1.14
+  - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
     entrypoint: sh
     args:
       - '-c'
@@ -21,7 +21,7 @@ steps:
         echo -n "$${TF_PLAN}" >> /workspace/tfplan.txt
         echo -n "\`\`\`" >> /workspace/tfplan.txt
         cat /workspace/tfplan.txt
-  - name: gcr.io/cloud-builders/curl
+  - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
     entrypoint: bash
     args:
       - '-c'

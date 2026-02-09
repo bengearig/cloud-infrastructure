@@ -61,28 +61,28 @@ resource "terraform_data" "lost_and_found_prod_enable_service_usage_api" {
   ]
 }
 
-resource "google_project_service" "lost_and_found_dev" {
-  project = google_project.lost_and_found_dev.id
-  for_each = toset([
-    "secretmanager.googleapis.com",
-    "sqladmin.googleapis.com",
-  ])
-  service            = each.key
-  disable_on_destroy = false
-  depends_on = [
-    terraform_data.lost_and_found_dev_enable_service_usage_api
-  ]
-}
+# resource "google_project_service" "lost_and_found_dev" {
+#   project = google_project.lost_and_found_dev.id
+#   for_each = toset([
+#     "secretmanager.googleapis.com",
+#     "sqladmin.googleapis.com",
+#   ])
+#   service            = each.key
+#   disable_on_destroy = false
+#   depends_on = [
+#     terraform_data.lost_and_found_dev_enable_service_usage_api
+#   ]
+# }
 
-resource "google_project_service" "lost_and_found_prod" {
-  project = google_project.lost_and_found_prod.id
-  for_each = toset([
-    "secretmanager.googleapis.com",
-    "sqladmin.googleapis.com",
-  ])
-  service            = each.key
-  disable_on_destroy = false
-  depends_on = [
-    terraform_data.lost_and_found_prod_enable_service_usage_api
-  ]
-}
+# resource "google_project_service" "lost_and_found_prod" {
+#   project = google_project.lost_and_found_prod.id
+#   for_each = toset([
+#     "secretmanager.googleapis.com",
+#     "sqladmin.googleapis.com",
+#   ])
+#   service            = each.key
+#   disable_on_destroy = false
+#   depends_on = [
+#     terraform_data.lost_and_found_prod_enable_service_usage_api
+#   ]
+# }
