@@ -1,7 +1,10 @@
 FROM google/cloud-sdk
 
 # PREREQUISITES
-USER root
+RUN mkdir -p /builder/home/.docker
+RUN mkdir -p /root/.docker
+RUN touch /root/.docker/config.json
+RUN ln -s /root/.docker/config.json /builder/home/.docker/config.json
 RUN apt-get update && apt-get install -y gnupg software-properties-common wget
 
 # TERRAFORM
