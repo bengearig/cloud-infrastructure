@@ -2,9 +2,11 @@ options:
   logging: CLOUD_LOGGING_ONLY
 steps:
   - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
+    entrypoint: terraform
     args:
       - init
   - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
+    entrypoint: terraform
     args:
       - plan
       - -out=/workspace/tfplan
