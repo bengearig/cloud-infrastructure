@@ -2,6 +2,12 @@ options:
   logging: CLOUD_LOGGING_ONLY
 steps:
   - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
+    entrypoint: gcloud
+    args:
+      - auth
+      - configure-docker
+      - us-central1-docker.pkg.dev
+  - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
     entrypoint: terraform
     args:
       - init

@@ -160,4 +160,7 @@ resource "docker_image" "cloud_build_primary" {
 
 resource "docker_registry_image" "cloud_build_primary" {
   name = docker_image.cloud_build_primary.name
+  triggers = {
+    dir_sha1 = sha1(join("", [for f in fileset(path.module, "docker/cloud-build/**") : filesha1(f)]))
+  }
 }
