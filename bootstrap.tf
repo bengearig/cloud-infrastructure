@@ -146,11 +146,12 @@ resource "docker_image" "cloud_build_primary" {
   build {
     context = "docker/cloud-build"
     tag = [
-      "cloud-build/primary:latest"
+      "cloud-build/primary:latest",
+      "cloud-build/primary:${var.docker_cloud_build_primary_version}",
     ]
   }
   triggers = {
-    dir_sha1 = sha1(join("", [for f in fileset(path.module, "docker/cloud-build/**") : filesha1(f)]))
+    version = var.docker_cloud_build_primary_version
   }
   depends_on = [
     google_project_service.bootstrap,
@@ -161,6 +162,6 @@ resource "docker_image" "cloud_build_primary" {
 resource "docker_registry_image" "cloud_build_primary" {
   name = docker_image.cloud_build_primary.name
   triggers = {
-    dir_sha1 = sha1(join("", [for f in fileset(path.module, "docker/cloud-build/**") : filesha1(f)]))
+    version = var.docker_cloud_build_primary_version
   }
 }

@@ -1,10 +1,6 @@
 FROM google/cloud-sdk
 
 # PREREQUISITES
-RUN mkdir -p /builder/home/.docker
-RUN mkdir -p /root/.docker
-RUN touch /root/.docker/config.json
-RUN ln -s /root/.docker/config.json /builder/home/.docker/config.json
 RUN apt-get update && apt-get install -y gnupg software-properties-common wget
 
 # TERRAFORM
@@ -18,4 +14,8 @@ RUN apt update
 RUN apt-get install -y terraform
 
 # DOCKER
+RUN mkdir -p /builder/home/.docker
+RUN mkdir -p /root/.docker
+RUN touch /root/.docker/config.json
+RUN ln -s /root/.docker/config.json /builder/home/.docker/config.json
 RUN apt install -y docker.io

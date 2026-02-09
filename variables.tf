@@ -30,9 +30,9 @@ variable "github_repo_names" {
   ]
 }
 
-variable "github_deploy_key_version" {
+variable "docker_cloud_build_primary_version" {
   type = string
-  default = 20260208
+  default = "1.0"
 }
 
 variable "networking_projects_prefix" {
@@ -61,7 +61,7 @@ variable "database_projects_user" {
 }
 
 variable "database_projects_dev_password_version" {
-  type = string
+  type = number
   default = 20260202
 }
 
@@ -86,7 +86,7 @@ variable "lost_and_found_projects_database_migrations_user" {
 }
 
 variable "lost_and_found_projects_database_migrations_user_password_version" {
-  type = string
+  type = number
   default = 20260209
 }
 
@@ -96,6 +96,6 @@ variable "lost_and_found_projects_database_app_user" {
 }
 
 variable "lost_and_found_projects_database_app_user_password_version" {
-  type = string
+  type = number
   default = 20260208
 }
