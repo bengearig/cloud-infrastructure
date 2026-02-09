@@ -16,17 +16,17 @@ steps:
       - plan
       - -out=/workspace/tfplan
   - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
-    entrypoint: sh
+    entrypoint: bash
     args:
       - '-c'
       - |
-        echo -n "# Terraform Plan File\\n\\n\`\`\`\\n" > /workspace/tfplan.txt
-        TF_PLAN=$(terraform show -no-color /workspace/tfplan)
-        TF_PLAN="$${TF_PLAN//$$'\n'/\\\n}"
-        TF_PLAN="$${TF_PLAN//$$'\r'/}"
-        TF_PLAN="$${TF_PLAN//\"/\\\"}"
-        echo -n "$${TF_PLAN}" >> /workspace/tfplan.txt
-        echo -n "\`\`\`" >> /workspace/tfplan.txt
+        echo -n "# Terraform Plan File\\n\\n\`\`\`\\n" > /workspace/tfplan.txt && \
+        TF_PLAN=$(terraform show -no-color /workspace/tfplan) && \
+        TF_PLAN="$${TF_PLAN//$$'\n'/\\\n}" && \
+        TF_PLAN="$${TF_PLAN//$$'\r'/}" && \
+        TF_PLAN="$${TF_PLAN//\"/\\\"}" && \
+        echo -n "$${TF_PLAN}" >> /workspace/tfplan.txt && \
+        echo -n "\`\`\`" >> /workspace/tfplan.txt && \
         cat /workspace/tfplan.txt
   - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
     entrypoint: bash
