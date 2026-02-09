@@ -1,27 +1,34 @@
 options:
   logging: CLOUD_LOGGING_ONLY
 steps:
-  - name: hashicorp/terraform:1.14
+  - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
+    entrypoint: bash
+    args:
+      - "-c"
+      - yes | gcloud auth configure-docker us-central1-docker.pkg.dev
+  - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
+    entrypoint: terraform
     args:
       - init
-  - name: hashicorp/terraform:1.14
+  - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
+    entrypoint: terraform
     args:
       - plan
       - -out=/workspace/tfplan
-  - name: hashicorp/terraform:1.14
-    entrypoint: sh
+  - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
+    entrypoint: bash
     args:
       - '-c'
       - |
-        echo -n "# Terraform Plan File\\n\\n\`\`\`\\n" > /workspace/tfplan.txt
-        TF_PLAN=$(terraform show -no-color /workspace/tfplan)
-        TF_PLAN="$${TF_PLAN//$$'\n'/\\\n}"
-        TF_PLAN="$${TF_PLAN//$$'\r'/}"
-        TF_PLAN="$${TF_PLAN//\"/\\\"}"
-        echo -n "$${TF_PLAN}" >> /workspace/tfplan.txt
-        echo -n "\`\`\`" >> /workspace/tfplan.txt
+        echo -n "# Terraform Plan File\\n\\n\`\`\`\\n" > /workspace/tfplan.txt && \
+        TF_PLAN=$(terraform show -no-color /workspace/tfplan) && \
+        TF_PLAN="$${TF_PLAN//$$'\n'/\\\n}" && \
+        TF_PLAN="$${TF_PLAN//$$'\r'/}" && \
+        TF_PLAN="$${TF_PLAN//\"/\\\"}" && \
+        echo -n "$${TF_PLAN}" >> /workspace/tfplan.txt && \
+        echo -n "\`\`\`" >> /workspace/tfplan.txt && \
         cat /workspace/tfplan.txt
-  - name: gcr.io/cloud-builders/curl
+  - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
     entrypoint: bash
     args:
       - '-c'

@@ -1,10 +1,17 @@
 options:
   logging: CLOUD_LOGGING_ONLY
 steps:
-  - name: hashicorp/terraform:1.14
+  - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
+    entrypoint: bash
+    args:
+      - "-c"
+      - yes | gcloud auth configure-docker us-central1-docker.pkg.dev
+  - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
+    entrypoint: terraform
     args:
       - init
-  - name: hashicorp/terraform:1.14
+  - name: us-central1-docker.pkg.dev/bootstrap-wjz4/cloud-build/primary:latest
+    entrypoint: terraform
     args:
       - apply
       - -auto-approve

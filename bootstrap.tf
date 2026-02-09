@@ -23,6 +23,7 @@ resource "google_project_service" "bootstrap" {
     "orgpolicy.googleapis.com",
     "secretmanager.googleapis.com",
     "cloudbuild.googleapis.com",
+    "artifactregistry.googleapis.com",
   ])
   service = each.key
 }
@@ -126,4 +127,40 @@ resource "google_iam_workload_identity_pool_provider" "github_actions" {
   depends_on = [
     google_iam_workload_identity_pool.github_actions,
   ]
+}
+
+######## CUSTOM CLOUD BUILD IMAGE ########
+
+resource "google_artifact_registry_repository" "cloud_build" {
+  project = google_project.bootstrap.project_id
+  repository_id = "cloud-build"
+  location = var.primary_region
+  format = "DOCKER"
+  depends_on = [
+    google_project_service.bootstrap,
+  ]
+}
+
+resource "docker_image" "cloud_build_primary" {
+  name = "${var.primary_region}-docker.pkg.dev/${google_project.bootstrap.project_id}/cloud-build/primary"
+  build {
+    context = "docker/cloud-build"
+    tag = [
+      "cloud-build/primary:latest"
+    ]
+  }
+  triggers = {
+    dir_sha1 = sha1(join("", [for f in fileset(path.module, "docker/cloud-build/**") : filesha1(f)]))
+  }
+  depends_on = [
+    google_project_service.bootstrap,
+    google_artifact_registry_repository.cloud_build,
+  ]
+}
+
+resource "docker_registry_image" "cloud_build_primary" {
+  name = docker_image.cloud_build_primary.name
+  triggers = {
+    dir_sha1 = sha1(join("", [for f in fileset(path.module, "docker/cloud-build/**") : filesha1(f)]))
+  }
 }
