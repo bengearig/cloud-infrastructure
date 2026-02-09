@@ -1,6 +1,7 @@
 FROM google/cloud-sdk
 
-# INSTALL DEPENDENCIES
+# PREREQUISITES
+USER root
 RUN apt-get update && apt-get install -y gnupg software-properties-common wget
 
 # TERRAFORM
